@@ -11,13 +11,17 @@ import { rehypePlugins } from "./app/mdx/rehype.mjs";
 import { remarkPlugins } from "./app/mdx/remark.mjs";
 
 export default defineConfig(
-  ({ isSsrBuild, command }): UserConfig => ({
-    build: {
-      rollupOptions: isSsrBuild
-        ? {
+  ({ command }): UserConfig => ({
+    // React Router 8 reads the custom server entry from the ssr environment
+    // config rather than `build.rollupOptions.input`.
+    environments: {
+      ssr: {
+        build: {
+          rollupOptions: {
             input: "./server/app.ts",
-          }
-        : undefined,
+          },
+        },
+      },
     },
     css: {
       postcss: {
